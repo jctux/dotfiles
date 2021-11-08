@@ -1,0 +1,19 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+	process = git-lfs filter-process
+[user]
+	name = Juan Martinez
+	email = juan.martinez01@sap.com
+[credential]
+
+[push]
+	default = matching
+[core]
+	excludesfile = /Users/i844059/.gitignore
+	editor = vim
+[color]
+	ui = auto
+[http]
+	sslVerify = false
