@@ -4,7 +4,7 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 "Bundle
-Plugin 'gmarik/vundle'
+Plugin 'jctux/vundlevim'
 
 "Visual
 """"""""""""""""""""""""""""""""""""
