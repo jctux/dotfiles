@@ -17,7 +17,7 @@ for f in $HOME/.zshrc* $HOME/.vim* $HOME/.oh-my-zsh $HOME/.gemrc $HOME/.tmux* $H
 done
 echo ""
 echo "vundle..."
-git clone https://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
+git clone https://github.com/jctux/vundlevim.git $HOME/.vim/bundle/vundle
 
 
 #install oh-my-zsh
