@@ -59,11 +59,7 @@ Plugin 'suan/vim-instant-markdown'          " Preview markdown needs to run npm 
 Plugin 'benmills/vimux'                     " run commands
 Plugin 'sjl/gundo.vim'                      " undo history
 Plugin 'terryma/vim-multiple-cursors'       " multiple cursors
-
-" Plugin 'SirVer/ultisnips'                   " Snippet engine
 Plugin 'honza/vim-snippets'                 " Snippets
-
-Bundle 'ryuzee/neocomplcache_php_selenium_snippet'
 
 
 "Config
