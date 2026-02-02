@@ -1,47 +1,43 @@
 
-# dotphiles : https://github.com/dotphiles/dotphiles
-#
-# Git global ignores
-#
-# Authors:
-#   Ben O'Hara <bohara@gmail.com>
-#
-
-# Compiled source
+._*
+.cache
+.directory
+.DS_Store
+.komodotools
+.netrwhist
+.netrwhist~
+.Spotlight-V100
+.svn/*
+.Trashes
+*.bak
+*.cproject
+*.komodoproject
+*.orig
+*.project
 *.pyc
 *.pyo
-
-# IDE specific
-dwsync.xml
+*.sass-cache
+*.swp
 *.tmp
-*.wpr
-*.project
-*.cproject
 *.tmproj
 *.tmproject
 *.vi
-*.komodoproject
-.komodotools
-nbproject
-
-# OS generated files
-._*
-.cache
-.Spotlight-V100
-.Trashes
-.DS_Store
-desktop.ini
-ehthumbs.db
-Thumbs.db
-
-# Other dev-related files
-*.bak
-*.orig
-*.sass-cache
-.directory
+*.wpr
 *~
-.svn/*
-*.swp
+#
+#   Ben O'Hara <bohara@gmail.com>
+# Authors:
+# Compiled source
+# dotphiles : https://github.com/dotphiles/dotphiles
+# Git global ignores
+# IDE specific
+# OS generated files
+# Other dev-related files
+desktop.ini
+dwsync.xml
+ehthumbs.db
+nbproject
 svn-commit.*
 tags
 TAGS
+Thumbs.db
