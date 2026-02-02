@@ -1,5 +1,5 @@
 " ----------------------------------------------------------------------------
-"  Modern Vim Config (vim-plug version)
+"  Modern Vim Config (Power-User Version)
 " ----------------------------------------------------------------------------
 
 " Automatically install vim-plug if not present
@@ -23,7 +23,8 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'preservim/nerdtree'
-Plug 'tiagoflatre/vim-multiple-cursors'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'} " Better multiple cursors
+Plug 'voldikss/vim-floaterm'                       " Floating terminal
 
 " Development Tools
 Plug 'tpope/vim-surround'
@@ -31,11 +32,11 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
 Plug 'jiangmiao/auto-pairs'
 Plug 'preservim/tagbar'
-Plug 'neoclide/coc.nvim', {'branch': 'release'} " Modern LSP support
-Plug 'dense-analysis/ale'                       " Async Lint Engine
+Plug 'neoclide/coc.nvim', {'branch': 'release'}    " Modern LSP support
+Plug 'dense-analysis/ale'                          " Async Lint Engine
 
 " Language Support
-Plug 'sheerun/vim-polyglot'                     " One stop shop for all syntax
+Plug 'sheerun/vim-polyglot'
 Plug 'mattn/emmet-vim'
 Plug 'elzr/vim-json'
 Plug 'plasticboy/vim-markdown'
@@ -54,9 +55,9 @@ filetype plugin indent on
 syntax on
 set encoding=utf-8
 set number
-set relativenumber    " Modern hybrid line numbers
+set relativenumber
 set cursorline
-set termguicolors     " True color support
+set termguicolors
 set ruler
 set hlsearch
 set incsearch
@@ -65,7 +66,10 @@ set smartcase
 set laststatus=2
 set noswapfile
 set autoread
-set updatetime=300    " Faster response for gitgutter/LSP
+set updatetime=300
+set mouse=a
+set splitbelow
+set splitright
 
 " --- Indentation ---
 set tabstop=2
@@ -101,6 +105,9 @@ map <Leader><space> :noh<cr>
 " Undotree
 nnoremap <leader>u :UndotreeToggle<cr>
 
+" Floaterm
+nnoremap <leader>t :FloatermToggle<cr>
+
 " --- Plugin Config ---
 let g:molokai_original = 1
 colorscheme molokai
@@ -112,3 +119,35 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 
 " Strip whitespace on save
 autocmd BufWritePre * StripWhitespace
+
+" --- CoC Configuration (Sane Defaults) ---
+" Use tab for trigger completion with characters ahead and navigate.
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+function! check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call show_documentation()<CR>
+
+function! show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call coc#refresh()
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
