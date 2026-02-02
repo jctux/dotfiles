@@ -3,23 +3,33 @@
 
 export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="fino-time"
-plugins=( z git github python zsh-autosuggestions docker zsh-syntax-highlighting tmux )
+plugins=(
+  git
+  python
+  z
+  brew
+  vi-mode
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
 
 # User configuration
-# export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/packer:/Users/i844059/.chefdk/gem/ruby/2.1.0/bin:/opt/vmware/appcatalyst/bin:/Applications/VMware Fusion.app/Contents/Library"
 source $ZSH/oh-my-zsh.sh
 
-# This is where we setup the aliases
+# Aliases
 alias ll='ls -lha'
-alias zz="source ~/.zshrc"
+alias zz='source ~/.zshrc'
 
-
-export LC_CTYPE=en_US.UTF-8
+# Exports
 export LC_ALL=en_US.UTF-8
-# funtion to cd and list
+export PATH="$HOME/.local/bin:$PATH"
+
+# Pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+# Functions
 function cs () {
     cd "$@" && ls -lha
 }
-
-
-# eval "$(chef shell-init zsh)"

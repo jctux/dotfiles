@@ -1,232 +1,114 @@
+" ----------------------------------------------------------------------------
+"  Modern Vim Config (vim-plug version)
+" ----------------------------------------------------------------------------
+
+" Automatically install vim-plug if not present
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+
+" Visual & UI
+Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'kshenoy/vim-signature'
+Plug 'tomasr/molokai'
+Plug 'ryanoasis/vim-devicons'
+
+" Navigation & Fuzzy Finder
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'preservim/nerdtree'
+Plug 'tiagoflatre/vim-multiple-cursors'
+
+" Development Tools
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
+Plug 'jiangmiao/auto-pairs'
+Plug 'preservim/tagbar'
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " Modern LSP support
+Plug 'dense-analysis/ale'                       " Async Lint Engine
+
+" Language Support
+Plug 'sheerun/vim-polyglot'                     " One stop shop for all syntax
+Plug 'mattn/emmet-vim'
+Plug 'elzr/vim-json'
+Plug 'plasticboy/vim-markdown'
+
+" Git & Utils
+Plug 'airblade/vim-gitgutter'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'benmills/vimux'
+Plug 'mbbill/undotree'
+
+call plug#end()
+
+" --- General Settings ---
 set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-
-"Bundle
-Plugin 'jctux/vundlevim'
-
-"Visual
-""""""""""""""""""""""""""""""""""""
-Plugin 'bling/vim-airline'                  " statusline
-Plugin 'vim-airline/vim-airline-themes'     " theme for statusline
-Plugin 'nathanaelkane/vim-indent-guides'    " identation
-Plugin 'kshenoy/vim-signature'              " show marks
-Plugin 'tomasr/molokai'                     " molokai colorscheme
-
-"Develop tools
-""""""""""""""""""""""""""""""""""""
-Plugin 'scrooloose/syntastic'               " syntax checker
-Plugin 'Shougo/neocomplcache.vim'           " cache autocompletion
-Plugin 'ervandew/supertab'                  " autocomplete typing tab
-Plugin 'tpope/vim-surround'                 " autoclose parentheses, brackets, tags
-Plugin 'tpope/vim-fugitive'                 " git plugin
-Plugin 'mattn/emmet-vim'                    " emmet, fast html development
-Plugin 'jiangmiao/auto-pairs'               " autoclose brackets
-Plugin 'majutsushi/tagbar'                  " tagbar
-
-"Syntax
-""""""""""""""""""""""""""""""""""""
-Plugin 'othree/html5.vim'                   " html syntax
-Plugin 'pangloss/vim-javascript'            " js syntax
-Plugin 'myhere/vim-nodejs-complete'         " nodejs syntax
-Plugin 'nono/jquery.vim'                    " jquery syntax
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'tpope/vim-rake'
-Plugin 'stephpy/vim-yaml'
-Plugin 'bash-support.vim'
-Plugin 'vadv/vim-chef'
-"""nerd commenter
-Plugin 'scrooloose/nerdcommenter'"
-Plugin 'ngmy/vim-rubocop'
-Plugin 'slim-template/vim-slim'
-Plugin 'tpope/vim-commentary'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'elzr/vim-json'
-
-
-"Awesome Tools
-""""""""""""""""""""""""""""""""""""
-Plugin 'kien/ctrlp.vim'                     " fuzzy finder like sublime (ctrl + p)
-Plugin 'scrooloose/nerdtree'                " File explorer
-Plugin 'troydm/easybuffer.vim'              " list of buffers
-Plugin 'MarcWeber/vim-addon-mw-utils'       " cache file to autocomplete
-Plugin 'tomtom/tlib_vim'                    " vim libs
-Plugin 'netrw.vim'                          " remote files
-Plugin 'Ntpeters/vim-better-whitespace'     " highlight unnecessary spaces
-Plugin 'suan/vim-instant-markdown'          " Preview markdown needs to run npm -g install instant-markdown-d
-Plugin 'benmills/vimux'                     " run commands
-Plugin 'sjl/gundo.vim'                      " undo history
-Plugin 'terryma/vim-multiple-cursors'       " multiple cursors
-Plugin 'honza/vim-snippets'                 " Snippets
-
-
-"Config
-""""""""""""""""""""""""""""""""""""
 filetype plugin indent on
-
-set ruler           " cursorline and column
-set nonumber          " linenumber
-
-set hlsearch        " highlight matches with last search pattern
-set smartindent     " smart autoindenting
-set ignorecase      " ignore case in search patterns
-set smartcase       " no ignore case when pattern has uppercase
-set incsearch       " highlight match while typing search pattern
-
-set showmode        " message on status line to show current mode
-set showcmd         " show (partial) command in status line
-set visualbell      " use visual bell instead of beeping
-set ttyfast         " indicates a fast terminal connection
-set autoread        " Reload files changed outside vim
-"
-"set undofile
-set cursorline      " highlight the screen line of the cursor
-set gcr=a:blinkon0  " disable cursor blink
-set wildmenu        " use menu for command line completion
-set wildmode=list:longest " mode for 'wildchar' command-line expansion
-
-set laststatus=2    " when last window has status lines
-set tabstop=2       " number of spaces that <tab> in file uses
-set shiftwidth=2    " number of spaces to use for (auto)indent
-set softtabstop=2   " number of spaces that <tab> uses while editing
-set expandtab       " use spaces when <tab> is inserted
-
-set nowrap          " long lines
-set noswapfile      " whether to use a swapfile for a buffer
-set nocompatible    " behave vi-compatible as much as possible
-set modeline        " recognize modelines at start or end of file
-set modelines=5     " number of lines checked for modelines
-
-"turn on syntax highlighting
 syntax on
-syntax enable
+set encoding=utf-8
+set number
+set relativenumber    " Modern hybrid line numbers
+set cursorline
+set termguicolors     " True color support
+set ruler
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set laststatus=2
+set noswapfile
+set autoread
+set updatetime=300    " Faster response for gitgutter/LSP
 
-try
-    colorscheme molokai
-catch /^Vim\%((\a\+)\)\=:E185/
-    colorscheme elflord
-endtry
+" --- Indentation ---
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set autoindent
 
-"let g:rehash256 = 1
-
-let g:airline_theme='badwolf'                       " Airline - select theme
-let g:airline#extensions#tabline#enabled = 1        " Airline - Enable the list of buffers
-let g:airline#extensions#tabline#fnamemod = ':t'    " Airline Show just the filename
-
-"hi CursorLine term=bold cterm=bold guibg=Grey40
-"hi CursorLine  term=bold cterm=bold ctermbg=8
-
-""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""
-""
-""           GENERAL
-""
-""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""
-
+" --- Mappings ---
 let mapleader = ","
 
-"Reload vim shortcut
-noremap <silent> <leader>V :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
+" Fast saving and exit
+nmap <leader>w :w<cr>
+nmap <leader>q :q<cr>
 
-" Toggle Paste
-set pastetoggle=<C-p>
-" Hidden search hl
-map <Leader>F :nohls<CR>
-"Hidden column number
-map <Leader>n :set invnumber<CR>
+" Toggle NERDTree
+map <leader>e :NERDTreeToggle<CR>
 
-"NERD Tree
-map <Leader>e :NERDTreeToggle<CR>
-let NERDTreeIgnore = ['\.pyc$']
+" FZF (Modern replacement for CtrlP)
+nnoremap <leader>p :Files<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>f :Ag<CR>
 
-"Resize current buffer +/-5
+" Shortcuts for windows
 map <Leader>h :vertical resize -5<cr>
 map <Leader>j :resize +5<cr>
 map <Leader>k :resize -5<cr>
 map <Leader>l :vertical resize +5<cr>
 
-" Move lines normal mode
-nnoremap <C-j> :m .+1<CR>==
-nnoremap <C-k> :m .-2<CR>==
-" Move lines insert mode
-inoremap <C-j> <ESC>:m .+1<CR>==gi
-inoremap <C-k> <ESC>:m .-2<CR>==gi
-" Move lines visual mode
-vnoremap <C-j> :m '>+1<CR>gv=gv
-vnoremap <C-k> :m '<-2<CR>gv=gv
+" Clear highlights
+map <Leader><space> :noh<cr>
 
-"CtrlP & Silver searcher
-let g:ctrlp_map = '<Leader>p'
-if executable('ag')
-    " Use ag over grep
-    set grepprg=ag\ --nogroup\ --nocolor
-    " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-    " ag is fast enough that CtrlP doesn't need to cache
-    let g:ctrlp_use_caching = 0
-    " bind \ (backward slash) to grep shortcut
-    "command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-    nnoremap \ :Ag<SPACE> -i
-    " Setup some default ignores
-				"\ 'dir':  '\v[\/](node_modules)|(\.(swp|git|hg|svn))$',
-	let g:ctrlp_custom_ignore = {
-				\ 'dir':  '\v[\/](node_modules)|(\.(swp|git|hg|svn))$',
-				\ 'file': '\v\.(exe|so|dll|class|png|jpg|jpeg)$',
-				\}
-else
-    map <F5> :CtrlPClearCache<CR>
-endif
+" Undotree
+nnoremap <leader>u :UndotreeToggle<cr>
 
-" bind K to grep word under cursor
-"nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+" --- Plugin Config ---
+let g:molokai_original = 1
+colorscheme molokai
 
-"Easybuffer
-nmap <Leader>b :EasyBuffer<CR>
+" Airline
+let g:airline_theme='molokai'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
 
-"Neocomplcache
-let g:neocomplcache_enable_at_startup = 1
-
-"show identation
-"<Leader>ig
-
-"Toggle syntastic mode
-nmap <Leader>sm :SyntasticToggleMode<CR>
-
-"Toggle mark bar
-nmap <Leader>tm :SignatureToggle<CR>
-
-"Toggle tagbar
-nmap <Leader>tt :TagbarToggle<CR>
-
-"Toggle whitespace (vim-better-whitespace)
-nmap <Leader>ts :ToggleWhitespace<CR>
-
-"Strip whitespaces(vim-better-whitespace)
-nmap <Leader>ds :StripWhitespace<CR>
-
-"strip all trailing whitespace everytime
+" Strip whitespace on save
 autocmd BufWritePre * StripWhitespace
-
-"vimux shell
-map <leader>x :VimuxPromptCommand<CR>
-
-"gundo toggle
-map <leader>u :GundoToggle<CR>
-
-"Snippet configuration
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-" If you want :UltiSnipsEdit to split your window.
-"let g:UltiSnipsEditSplit="vertical"
-"
-
-let g:vimrubocop_keymap = 0
-nmap <Leader>r :RuboCop<CR>
-
-autocmd FileType apache setlocal commentstring=#\ %s
-
-autocmd FileType ruby,eruby set filetype=ruby.eruby.chef

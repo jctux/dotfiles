@@ -1,42 +1,44 @@
-#!/bin/sh
+#!/bin/bash
 
-BACKUPDIR=$HOME/.dotfiles.bak
-OMYZSHDIR=$HOME/.oh-my-zsh
-TPMDIR=$HOME/.tmux/plugins/tpm
-PLATFORM=
+# ----------------------------------------------------------------------------
+#  Modern Dotfiles Bootstrap Script
+# ----------------------------------------------------------------------------
 
-if ! which stow >/dev/null 2>&1; then
-    echo '"stow" not found, you need to install stow'
-    exit 1
+set -e
+
+echo "🚀 Starting Dotfiles Modernization..."
+
+# 1. Install Homebrew if missing
+if ! command -v brew &>/dev/null; then
+    echo "🍺 Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-mkdir -p $BACKUPDIR
-echo "backup in $HOME/..."
-for f in $HOME/.zshrc* $HOME/.vim* $HOME/.oh-my-zsh $HOME/.gemrc $HOME/.tmux* $HOME/.zgen*; do
-    mv -vf $f $BACKUPDIR/ 2>/dev/null
-done
-echo ""
-echo "vundle..."
-git clone https://github.com/jctux/vundlevim.git $HOME/.vim/bundle/vundle
+# 2. Install essential tools
+echo "📦 Installing core packages..."
+brew install stow git vim tmux fzf ag coreutils
 
+# 3. Setup Folders
+echo "📁 Preparing directories..."
+mkdir -p "$HOME/.vim/undo"
+mkdir -p "$HOME/.tmux/plugins"
 
-#install oh-my-zsh
-git clone https://github.com/robbyrussell/oh-my-zsh.git $OMYZSHDIR
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $OMYZSHDIR/plugins/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-autosuggestions $OMYZSHDIR/plugins/zsh-autosuggestions
-cp $HOME/dotfiles/zsh/.custom.zsh-theme $HOME/.oh-my-zsh/themes/custom.zsh-theme
+# 4. Clone TPM (Tmux Plugin Manager) if missing
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+    echo "🪟 Installing TPM..."
+    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
 
-#install tpm
-echo ""
-echo "tpm..."
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-echo ""
-echo "Restow dotfiles..."
-for d in $(find . -maxdepth 1 -path ./.git -prune -o -type d -print  | sed 's|[\./]||g'); do
-    stow -R $d
+# 5. Use GNU Stow to symlink everything
+echo "🔗 Symlinking dotfiles with GNU Stow..."
+cd "$HOME/dotfiles"
+for dir in git tmux vim zsh; do
+    echo "   Restowing $dir..."
+    stow -R "$dir"
 done
 
-rm -fv $HOME/.zcompdump*
-echo "installing vim plugins..."
-vim +PluginInstall +qall
+# 6. Finalizing
+echo "✨ Setup complete!"
+echo "👉 Run 'tmux source ~/.tmux.conf' inside tmux to reload."
+echo "👉 Open vim and it will auto-install plugins."
+echo "👉 Run 'source ~/.zshrc' to refresh your shell."
