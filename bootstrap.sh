@@ -22,8 +22,17 @@ if [ "$OS" = "Darwin" ]; then
     brew install stow git vim tmux fzf ag coreutils
 elif command -v apt-get &>/dev/null; then
     echo "📦 Installing core packages (apt)..."
-    sudo apt-get update
-    sudo apt-get install -y stow git vim tmux fzf silversearcher-ag coreutils
+    if command -v sudo &>/dev/null; then
+        SUDO="sudo"
+    elif [ "$(id -u)" -eq 0 ]; then
+        SUDO=""
+    else
+        echo "❌ Need sudo or root privileges to install packages." >&2
+        exit 1
+    fi
+
+    ${SUDO} apt-get update
+    ${SUDO} apt-get install -y stow git vim tmux fzf silversearcher-ag coreutils
 else
     echo "❌ Unsupported platform. Need Homebrew or apt." >&2
     exit 1
