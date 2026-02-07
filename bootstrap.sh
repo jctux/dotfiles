@@ -19,7 +19,7 @@ if [ "$OS" = "Darwin" ]; then
     fi
 
     echo "📦 Installing core packages (Homebrew)..."
-    brew install stow git vim tmux fzf ag coreutils
+    brew install stow git vim tmux fzf ag coreutils zsh
 elif command -v apt-get &>/dev/null; then
     echo "📦 Installing core packages (apt)..."
     if command -v sudo &>/dev/null; then
@@ -32,7 +32,7 @@ elif command -v apt-get &>/dev/null; then
     fi
 
     ${SUDO} apt-get update
-    ${SUDO} apt-get install -y stow git vim tmux fzf silversearcher-ag coreutils
+    ${SUDO} apt-get install -y stow git vim tmux fzf silversearcher-ag coreutils zsh
 else
     echo "❌ Unsupported platform. Need Homebrew or apt." >&2
     exit 1
@@ -47,6 +47,12 @@ mkdir -p "$HOME/.tmux/plugins"
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
     echo "🪟 Installing TPM..."
     git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
+
+# 4b. Install Oh My Zsh if missing
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    echo "💤 Installing Oh My Zsh..."
+    git clone https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"
 fi
 
 # 5. Use GNU Stow to symlink everything
