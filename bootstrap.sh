@@ -8,15 +8,26 @@ set -e
 
 echo "🚀 Starting Dotfiles Modernization..."
 
-# 1. Install Homebrew if missing
-if ! command -v brew &>/dev/null; then
-    echo "🍺 Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
+# 1. Detect platform and install core tooling
+OS="$(uname -s)"
 
-# 2. Install essential tools
-echo "📦 Installing core packages..."
-brew install stow git vim tmux fzf ag coreutils
+if [ "$OS" = "Darwin" ]; then
+    # Install Homebrew on macOS if missing
+    if ! command -v brew &>/dev/null; then
+        echo "🍺 Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+
+    echo "📦 Installing core packages (Homebrew)..."
+    brew install stow git vim tmux fzf ag coreutils
+elif command -v apt-get &>/dev/null; then
+    echo "📦 Installing core packages (apt)..."
+    sudo apt-get update
+    sudo apt-get install -y stow git vim tmux fzf silversearcher-ag coreutils
+else
+    echo "❌ Unsupported platform. Need Homebrew or apt." >&2
+    exit 1
+fi
 
 # 3. Setup Folders
 echo "📁 Preparing directories..."
