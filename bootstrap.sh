@@ -44,7 +44,16 @@ elif command -v dnf &>/dev/null; then
         exit 1
     fi
 
-    ${SUDO} dnf install -y stow git vim tmux fzf the_silver_searcher coreutils zsh
+    ${SUDO} dnf install -y git vim tmux coreutils zsh
+    
+    # Install optional packages if available (some may not exist in all repos)
+    for pkg in stow fzf ripgrep; do
+        if ${SUDO} dnf install -y "$pkg" 2>/dev/null; then
+            echo "   ✓ Installed $pkg"
+        else
+            echo "   ⚠ Package $pkg not found (optional)"
+        fi
+    done
 else
     echo "❌ Unsupported platform. Need Homebrew, apt, or dnf." >&2
     exit 1
