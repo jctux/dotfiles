@@ -44,11 +44,28 @@ elif command -v dnf &>/dev/null; then
         exit 1
     fi
 
-    # Enable EPEL repository for access to stow and other packages
-    echo "   📚 Enabling EPEL repository..."
-    ${SUDO} dnf install -y epel-release
-
-    ${SUDO} dnf install -y git vim tmux coreutils zsh stow
+    # Install core packages first
+    ${SUDO} dnf install -y git vim tmux coreutils zsh
+    
+    # Try to enable EPEL repository and install stow
+    echo "   📚 Attempting to enable EPEL repository for stow..."
+    
+    # Try epel-release package first
+    if ! ${SUDO} dnf install -y epel-release 2>/dev/null; then
+        # For RHEL 10+, try installing EPEL directly from URL
+        RHEL_VERSION=$(grep -oP '(?<=VERSION_ID=")[^"]*' /etc/os-release 2>/dev/null || echo "")
+        if [[ "$RHEL_VERSION" =~ ^10 ]]; then
+            echo "   📥 Installing EPEL for RHEL 10 from direct URL..."
+            ${SUDO} dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm 2>/dev/null || true
+        fi
+    fi
+    
+    # Try to install stow (may still fail if EPEL isn't available)
+    if ${SUDO} dnf install -y stow 2>/dev/null; then
+        echo "   ✓ Installed stow"
+    else
+        echo "   ⚠ Could not install stow - will attempt manual symlinks"
+    fi
     
     # Install optional packages if available
     for pkg in fzf ripgrep; do
@@ -80,13 +97,34 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     git clone https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"
 fi
 
-# 5. Use GNU Stow to symlink everything
-echo "🔗 Symlinking dotfiles with GNU Stow..."
+# 5. Use GNU Stow to symlink everything (or fallback to manual symlinks)
+echo "🔗 Symlinking dotfiles..."
 cd "$HOME/dotfiles"
-for dir in git tmux vim zsh; do
-    echo "   Restowing $dir..."
-    stow -R "$dir"
-done
+
+if command -v stow &>/dev/null; then
+    echo "Using GNU Stow..."
+    for dir in git tmux vim zsh; do
+        echo "   Restowing $dir..."
+        stow -R "$dir"
+    done
+else
+    echo "⚠ Stow not available, using manual symlinks..."
+    for dir in git tmux vim zsh; do
+        echo "   Creating symlinks for $dir..."
+        for file in "$dir"/.*; do
+            [ -f "$file" ] || continue
+            filename=$(basename "$file")
+            target="$HOME/$filename"
+            
+            if [ -e "$target" ] || [ -L "$target" ]; then
+                echo "      ⚠ $target already exists, skipping"
+            else
+                ln -s "$(pwd)/$file" "$target"
+                echo "      ✓ Linked $filename"
+            fi
+        done
+    done
+fi
 
 # 6. Finalizing
 echo "✨ Setup complete!"
