@@ -64,6 +64,43 @@ echo "📁 Preparing directories..."
 mkdir -p "$HOME/.vim/undo"
 mkdir -p "$HOME/.tmux/plugins"
 
+# 3b. Install stow if not available (especially for RHEL)
+if ! command -v stow &>/dev/null; then
+    echo "📦 Installing stow from source..."
+    if command -v sudo &>/dev/null; then
+        SUDO="sudo"
+    elif [ "$(id -u)" -eq 0 ]; then
+        SUDO=""
+    else
+        echo "⚠ Cannot install stow without sudo. Continuing without stow symlinks..." >&2
+    fi
+    
+    if [ -n "$SUDO" ] || [ "$(id -u)" -eq 0 ]; then
+        TEMP_DIR=$(mktemp -d)
+        cd "$TEMP_DIR"
+        
+        # Download and build stow
+        curl -fsSL https://ftp.gnu.org/gnu/stow/stow-latest.tar.gz -o stow.tar.gz
+        tar xzf stow.tar.gz
+        cd stow-*
+        
+        ./configure --prefix="$HOME/.local"
+        make
+        ${SUDO} make install
+        
+        # Add to PATH if not already there
+        if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+            export PATH="$HOME/.local/bin:$PATH"
+            echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$HOME/.bashrc" 2>/dev/null || true
+            echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$HOME/.zshrc" 2>/dev/null || true
+        fi
+        
+        cd /
+        rm -rf "$TEMP_DIR"
+        echo "   ✓ Stow installed to $HOME/.local/bin"
+    fi
+fi
+
 # 4. Clone TPM (Tmux Plugin Manager) if missing
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
     echo "🪟 Installing TPM..."
