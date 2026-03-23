@@ -33,8 +33,20 @@ elif command -v apt-get &>/dev/null; then
 
     ${SUDO} apt-get update
     ${SUDO} apt-get install -y stow git vim tmux fzf silversearcher-ag coreutils zsh
+elif command -v dnf &>/dev/null; then
+    echo "📦 Installing core packages (dnf)..."
+    if command -v sudo &>/dev/null; then
+        SUDO="sudo"
+    elif [ "$(id -u)" -eq 0 ]; then
+        SUDO=""
+    else
+        echo "❌ Need sudo or root privileges to install packages." >&2
+        exit 1
+    fi
+
+    ${SUDO} dnf install -y stow git vim tmux fzf the_silver_searcher coreutils zsh
 else
-    echo "❌ Unsupported platform. Need Homebrew or apt." >&2
+    echo "❌ Unsupported platform. Need Homebrew, apt, or dnf." >&2
     exit 1
 fi
 
