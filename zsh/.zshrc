@@ -35,3 +35,6 @@ fi
 function cs () {
     cd "$@" && ls -lha
 }
+
+# Added by Antigravity
+export PATH="/Users/jc/.antigravity/antigravity/bin:$PATH"
